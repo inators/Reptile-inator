@@ -224,6 +224,8 @@ void processInput(void) {
         parseHeat();
     if(input[0] == 'L')
         parseLight();
+	if(input[0] == 'R')
+		readSensors();
     bufferIndex = 0;
 
     input[0] = 0; // reset the string
@@ -448,6 +450,25 @@ int testColor(int color) {
     }
     return 0;
 }
+
+
+/***************
+ * Read the sensors 
+ * Basically just send the last temperature readings to the serial port
+ */
+void readSensors(void) {
+	Serial.print("temp1:");
+	Serial.print(temperature,DEC);
+	Serial.print(":temp2:");
+	Serial.print(temperature2,DEC);
+	if(toggleHeat == 1) {
+		Serial.println(":Heat on");
+	} else {
+		Serial.println(":Heat off");
+	}
+	
+}
+ 
 
 
 void displayMe(void) {

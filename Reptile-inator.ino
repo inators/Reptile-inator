@@ -294,18 +294,7 @@ void parseTime(void) {
     tm.tm_mon = month;
     tm.tm_mday = day;
     rtc.setClock(tm);
-
-    Serial.print(month,DEC);
-    Serial.print("/");
-    Serial.print(day,DEC);
-    Serial.print("/");
-    Serial.print(year,DEC);
-    Serial.print(" ");
-    Serial.print(hour,DEC);
-    Serial.print(":");
-    Serial.print(minute,DEC);
-    Serial.print(":");
-    Serial.println(second,DEC);
+	printTime();
 
 
 }
@@ -458,18 +447,53 @@ int testColor(int color) {
  */
 void readSensors(void) {
 	Serial.print("temp1:");
-	Serial.print(temperature,DEC);
+	Serial.print(temperature,2);
 	Serial.print(":temp2:");
-	Serial.print(temperature2,DEC);
+	Serial.print(temperature2,2);
 	if(toggleHeat == 1) {
 		Serial.println(":Heat on");
 	} else {
 		Serial.println(":Heat off");
 	}
-	
+	Serial.print("Humidity1:");
+	Serial.print(humidity,2);
+	Serial.print(":Humidity2:");
+	Serial.print(humidity2,2);
+	Serial.println(":");
+	printTime();
 }
- 
 
+/************
+ * Print the time.  Duh.
+ */
+void printTime(void) {
+    if(tm.tm_mon < 10)
+        Serial.print("0");
+    Serial.print(tm.tm_mon);
+    Serial.print("/");
+    if(tm.tm_mday < 10)
+        Serial.print("0");
+    Serial.print(tm.tm_mday);
+    Serial.print("/");
+    Serial.print((tm.tm_year+1900));
+    Serial.print(" ");
+    if(tm.tm_hour < 10)
+        Serial.print("0");
+    Serial.print(tm.tm_hour);
+    Serial.print(":");
+    if(tm.tm_min < 10)
+        Serial.print("0");
+    Serial.print(tm.tm_min);
+    Serial.print(":");
+    if(tm.tm_sec < 10)
+        Serial.print("0");
+    Serial.println(tm.tm_sec);
+}	
+	
+
+/************
+ * Display on the screen
+ */
 
 void displayMe(void) {
     display.clearDisplay();

@@ -49,6 +49,7 @@ char daytimeEnd = 20;
 float heaterTempLow = 80;
 float heaterTempHigh = 85;
 char toggleHeat = 0;
+char heatOverride = 0;
 
 // RGB Levels for day and night
 unsigned char redDay = 100;
@@ -195,7 +196,7 @@ void loop() {
 
         }
 
-        if(toggleHeat == 0) {
+        if(toggleHeat == 0 && heatOverride == 0) {
             // heater is off
             if(temperature2 < heaterTempLow) {
                 toggleHeat = 1;
@@ -226,6 +227,8 @@ void processInput(void) {
         parseLight();
 	if(input[0] == 'R')
 		readSensors();
+	if(input[0] == 'O')
+		overrideHeat();
     bufferIndex = 0;
 
     input[0] = 0; // reset the string
@@ -490,6 +493,29 @@ void printTime(void) {
     Serial.println(tm.tm_sec);
 }	
 	
+	
+/**************
+ * overrideHeat
+ * When you wnat the switch pin to be low or high just because
+ * Stops the temperature check for the heat.
+ * O1,1 - 1 to override heat (0 not to) or second 1 to turn heat on or off
+ */
+
+void overrideHeat(void) {
+	if(input[1] == '1') {
+		heatOverride = 1;
+	} else {
+		heatOverride = 0;
+	}
+	if(input[3] == '1') {
+		toggleHeat = 1;
+		digitalWrite(SWITCHPIN,LOW);
+	} else {
+		toggleHeat = 0;
+		digitalWrite(SWITCHPIN,HIGH);
+	}
+}
+
 
 /************
  * Display on the screen
@@ -537,8 +563,13 @@ void displayMe(void) {
     if(toggleHeat == 1) {
         display.print("HEAT ");
     } else {
-        display.print("    ");
+        display.print("     ");
     }
+	if(heatOverride == 1) {
+		display.print("OVRRDE ");
+	} else {
+		display.print("       ");
+	}
 
     display.display();
 }

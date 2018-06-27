@@ -1,5 +1,5 @@
 
-var $ = function( id ) { return document.getElementById( id ); };
+var $ = function(id) {return document.getElementById(id);};
 
 $("coldTemp").innerHTML = "1&#176;F";
 $("hotTemp").innerHTML = "2&#176;F";

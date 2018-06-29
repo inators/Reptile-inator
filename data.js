@@ -7,5 +7,6 @@ $("coldHum").innerHTML = "3%";
 $("hotHum").innerHTML = "4%";
 $("headStat").innerHTML = "5";
 $("time").innerHTML = "7";
-
-
+$("inputLowTemp").value = "80";
+$("inputHighTemp").value = "85";
+$("heaterStatus").checked = true;

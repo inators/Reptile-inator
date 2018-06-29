@@ -64,7 +64,7 @@ DHT dht(DHTPIN, DHTTYPE);
 DHT dht2(DHTPIN2, DHTTYPE);
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(115200);
 
     /*
      * Clock Crap

@@ -1,6 +1,5 @@
 
 var $ = function(id) {return document.getElementById(id);};
-
 $("coldTemp").innerHTML = "1&#176;F";
 $("hotTemp").innerHTML = "2&#176;F";
 $("coldHum").innerHTML = "3%";

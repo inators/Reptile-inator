@@ -1,0 +1,51 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+<h1>Reptile-inator</h1>
+<table class=temp>
+	<tr class=temp>
+		<th class=temp></th><th class=temp>Cool side</th><th class=temp>Hot side</th>
+	</tr>
+	<tr class=temp>
+		<td class=temp>Temperature</td><td class=temp><span id="coldTemp">???&#176;F</span></td>
+		<td class=temp><span id="hotTemp">???&#176;F</span></td>
+	</tr>
+	<tr class=temp>
+		<td class=temp>Humidity</td><td class=temp><span id="coldHum">???%</span></td>
+		<td class=temp><span id="hotHum">???%</span></td>
+	</tr>
+</table>
+<h2>Heater: <span id="heatStat">???</span></h2>
+<h2>Time: <span id="time">???</span></h2>
+
+<form method=post action="/processme.html" >
+	<table class=form>
+	<tr class=form><th class=form colspan=2>When heater turns on:</th></tr>
+	<tr class=form><td class=form>
+	Low Temperature &#176;F</td><td> <input name=lowTemp id="inputLowTemp" size=3></td></tr>
+	<tr class=form><td class=form>High Temperature &#176;F</td><td> <input name=HighTemp id="inputHighTemp" size=3><br></td></tr>
+	<tr class=form><td class=form>Heat Override</td><td> <input name=heatOverride id="heatOverride" type=checkbox><br></td></tr>
+	<tr class=form><td class=form>Heater Status</td><td> <input name=heaterStatus id="heaterStatus" type=checkbox><br></td></tr>
+	</table>
+	<table class=rgb><tr class=rgb>
+		<th class=rgb></th><th class=rgb>Red</th><th class=rgb>Green</th><th class=rgb>Blue</th></tr>
+		<tr class=rgb><th class=rgb>Daytime light string values</th><td><input name=dayRed id="dayRed" size=3></td>
+		<td><input name=dayGreen id="dayGreen" size=3></td><td><input name=dayBlue id="dayBlue" size=3></td></tr>
+		<tr class=rgb><th class=rgb>Nighttime light string values</th><td><input name=nightRed id="nightRed" size=3></td>
+		<td><input name=nightGreen id="nightGreen" size=3></td><td><input name=nightBlue id="nightBlue" size=3></td></tr>
+	</table>
+	<table class=times >
+		<tr class=times><th class=times colspan=2 >Day changes into night</th></tr>
+		<tr class=times><td class=times>Turn day on (24 hr time)</td><td class=times><input name=morning id="morning" size=3></td></tr>
+	<tr class=times><td class=times>Turn night on (24 hr time)</td><td class=times><input name=evening id="evening" size=3></td></tr>		
+	</table>
+	<table password>
+	<tr class=password><td class=password>Password</td><td class=password> <input type=password name=chgPass id="inputPass" ><br></td></tr>
+	</table>
+	<input type=submit>
+</form>
+</body>
+<script src="data.js"></script>
+</html>

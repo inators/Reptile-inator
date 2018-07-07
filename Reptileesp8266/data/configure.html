@@ -25,7 +25,7 @@
 	<tr class=form><th class=form colspan=2>When heater turns on:</th></tr>
 	<tr class=form><td class=form>
 	Low Temperature &#176;F</td><td> <input name=lowTemp id="inputLowTemp" size=3></td></tr>
-	<tr class=form><td class=form>High Temperature &#176;F</td><td> <input name=HighTemp id="inputHighTemp" size=3><br></td></tr>
+	<tr class=form><td class=form>High Temperature &#176;F</td><td> <input name=highTemp id="inputHighTemp" size=3><br></td></tr>
 	<tr class=form><td class=form>Heat Override</td><td> <input name=heatOverride id="heatOverride" type=checkbox><br></td></tr>
 	<tr class=form><td class=form>Heater Status</td><td> <input name=heaterStatus id="heaterStatus" type=checkbox><br></td></tr>
 	</table>
@@ -38,14 +38,16 @@
 	</table>
 	<table class=times >
 		<tr class=times><th class=times colspan=2 >Day changes into night</th></tr>
-		<tr class=times><td class=times>Turn day on (24 hr time)</td><td class=times><input name=morning id="morning" size=3></td></tr>
-	<tr class=times><td class=times>Turn night on (24 hr time)</td><td class=times><input name=evening id="evening" size=3></td></tr>		
+		<tr class=times><td class=times>Turn day on (24 hr time)</td><td class=times><input name=daytimeStart id="daytimeStart" size=3></td></tr>
+	<tr class=times><td class=times>Turn night on (24 hr time)</td><td class=times><input name=daytimeEnd id="daytimeEnd" size=3></td></tr>		
 	</table>
 	<table password>
 	<tr class=password><td class=password>Password</td><td class=password> <input type=password name=chgPass id="inputPass" ><br></td></tr>
 	</table>
 	<input type=submit>
 </form>
+<a href="/clock.html">Click to set the clock.</a><br>
+<a href="/">Click to return to summary.</a>
 </body>
 <script src="data.js"></script>
 </html>

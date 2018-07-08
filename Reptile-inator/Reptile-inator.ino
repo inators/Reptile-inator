@@ -56,6 +56,8 @@ unsigned char greenNight = 0;
 unsigned char blueNight = 75;
 
 
+unsigned long currentMillis = 0;
+
 DHT dht(DHTPIN, DHTTYPE);
 DHT dht2(DHTPIN2, DHTTYPE);
 
@@ -139,13 +141,10 @@ void loop() {
 
     }
 
-    // millis function will reset eventually. Need to deal with that.
-    if (millis() < 100 && last > 10000)
-        last = 0;
 
-
-    if (millis() - last > 250) {
-        last = millis();
+    currentMillis = millis();
+    if (currentMillis - last > 250) {
+        last = currentMillis;
 
         // Get the clock
         rtc.readClock(tm);

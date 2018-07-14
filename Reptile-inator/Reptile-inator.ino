@@ -5,6 +5,8 @@
 #include <Adafruit_SSD1306.h>
 #include "DHT.h"
 #include <EEPROM.h>
+#include <OneWire.h>              // For DS18B20
+#include <DallasTemperature.h>    // For DS18B20
 
 #define OLED_RESET 4
 Adafruit_SSD1306 display(OLED_RESET);
@@ -12,6 +14,8 @@ Adafruit_SSD1306 display(OLED_RESET);
 #define DHTTYPE DHT22   // DHT 22 Thermometer
 #define DHTPIN 2     // what digital pin it is connected to
 #define DHTPIN2 4   // second thermometer connected
+
+#define SURFACEPIN 5 // Surface thermometer
 
 #define INPUT_SIZE 25
 
@@ -31,6 +35,7 @@ float coldHum = 0;
 float coldTemp = 0;
 float hotHum = 0;
 float hotTemp = 0;
+float surfaceTemp = 0;
 struct RTCx::tm tm;
 
 char input[INPUT_SIZE + 1];
@@ -58,8 +63,14 @@ unsigned char blueNight = 75;
 
 unsigned long currentMillis = 0;
 
+// DHT temp/humidity sensors
 DHT dht(DHTPIN, DHTTYPE);
 DHT dht2(DHTPIN2, DHTTYPE);
+
+// DS18B20 surface(ish) thermometer
+OneWire oneWire(SURFACEPIN);
+DallasTemperature surfaceSensor(&oneWire);
+
 
 void setup() {
     Serial.begin(115200);
@@ -80,7 +91,7 @@ void setup() {
         // Nothing found at any of the addresses listed.
         Serial.println(F("No RTCx found, cannot continue"));
         //while (1)
-            ;
+        ;
     }
 
     // Enable the battery backup. This happens by default on the DS1307
@@ -114,6 +125,9 @@ void setup() {
     pinMode(GREENPIN, OUTPUT);
     pinMode(BLUEPIN, OUTPUT);
     pinMode(SWITCHPIN, OUTPUT);
+
+
+    surfaceSensor.begin();
 
 
     readEEPROMValues();
@@ -152,11 +166,22 @@ void loop() {
 
         // Do things every 2 seconds or so
         count++;
+        //need to request the temperature - example sketch says to wait a second
+        if (count == 4) {
+            surfaceSensor.requestTemperatures();
+        }
+
         if (count >= 8) {
             coldHum = dht.readHumidity();
             coldTemp = dht.readTemperature(true);
             hotHum = dht2.readHumidity();
             hotTemp = dht2.readTemperature(true);
+            float tempFloat = 0;
+            tempFloat = surfaceSensor.getTempFByIndex(0);
+            if (tempFloat > 0) 
+                surfaceTemp = tempFloat;
+
+            
             count = 0;
 
             if (tm.tm_hour >= daytimeStart && tm.tm_hour <= daytimeEnd) {
@@ -175,13 +200,13 @@ void loop() {
 
         if (toggleHeat == 0 && heatOverride == 0) {
             // heater is off
-            if (hotTemp < heaterTempLow) {
+            if (surfaceTemp < heaterTempLow) {
                 toggleHeat = 1;
                 digitalWrite(SWITCHPIN, LOW);
             }
         } else {
             // heater is on
-            if (hotTemp > heaterTempHigh) {
+            if (surfaceTemp > heaterTempHigh) {
                 toggleHeat = 0;
                 digitalWrite(SWITCHPIN, HIGH);
             }
@@ -411,7 +436,7 @@ float parseHeat(void) {
     thisTemp = atof(buf);
     failTemp = testTemp(thisTemp); // doing a function since we repeat it to save some program space
     if (failTemp == -1)
-        return;
+        return 0;
     return thisTemp;
 }
 
@@ -537,6 +562,8 @@ void readSensors(void) {
     Serial.print(coldHum, 2);
     Serial.print(F(":hotHum:"));
     Serial.print(hotHum, 2);
+    Serial.print(F(":surfaceTemp:"));
+    Serial.print(surfaceTemp, 2);
     Serial.println(F(":"));
     printTime();
 }
@@ -547,7 +574,7 @@ void readSensors(void) {
 */
 
 void dumpEverything(void) {
-	Serial.print(F("DUMP,"));
+    Serial.print(F("DUMP,"));
     Serial.print(coldHum, 2);
     Serial.print(F(","));
     Serial.print(hotHum, 2);
@@ -579,6 +606,8 @@ void dumpEverything(void) {
     Serial.print(daytimeStart, DEC);
     Serial.print(F(","));
     Serial.print(daytimeEnd, DEC);
+    Serial.print(F(","));
+    Serial.print(surfaceTemp, 2);
     Serial.print(F(","));
     printTime();
 }
@@ -707,6 +736,9 @@ void displayMe(void) {
     display.print("*F ");
     display.print(hotHum);
     display.println("%");
+
+    display.print(surfaceTemp);
+    display.print("*F ");
 
     // If heater is on
     if (toggleHeat == 1) {

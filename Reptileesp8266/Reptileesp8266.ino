@@ -22,13 +22,14 @@ const char* otaHostname = "reptile-inator";
 const char* ssid = "Your_SSID";
 const char* wifiPassword = "Your_Password";
 
-// Global variables
+// Global variables - just sample values for testing. They get overwritten pretty quickly
 unsigned long last = 0;
 char count = 0;
 float coldHum = 20.0;
 float coldTemp = 70.0;
 float hotHum = 30.0;
 float hotTemp = 80.0;
+float surfaceTemp = 85.0;
 char timeString[100];
 
 // Time for daylight
@@ -112,7 +113,7 @@ void loop() {
 
     if (millis() - last > 10000) {
         last = millis();
-        Serial.println("D");
+        Serial.println("D"); // gets the data from the arduino
     }
 }
 
@@ -337,7 +338,7 @@ void setupOTA(void) {
 
 void injectData(void) {
     //Serial.println("injectData");
-    char data[700];
+    char data[800];
     char heat[] = "off";
     char heaterStat[5] = "";
     if (toggleHeat == 1) {
@@ -352,7 +353,8 @@ void injectData(void) {
     sprintf(data, "var $ = function(id) {return document.getElementById(id);}; \
 	$('coldTemp').innerHTML = '%.2f&#176;F'; \
 	$('hotTemp').innerHTML = '%.2f&#176;F'; \
-	$('coldHum').innerHTML = '%.2f%%'; \
+  $('surfaceTemp').innerHTML = '%.2f&#176;F'; \
+  $('coldHum').innerHTML = '%.2f%%'; \
 	$('hotHum').innerHTML = '%.2f%%'; \
 	$('heatStat').innerHTML = '%s'; \
 	$('time').innerHTML = '%s'; \
@@ -367,11 +369,12 @@ void injectData(void) {
 	$('nightGreen').value = %d; \
 	$('nightBlue').value = %d; \
 	$('daytimeStart').value = %d; \
-	$('daytimeEnd').value = %d;"
-            , coldTemp, hotTemp, coldHum, hotHum, heat, timeString, heaterTempLow, heaterTempHigh, heatOver, heaterStat, redDay, greenDay, blueDay, redNight, greenNight,
-            blueNight, daytimeStart, daytimeEnd);
+	$('daytimeEnd').value = %d; "
+            , coldTemp, hotTemp, surfaceTemp, coldHum, hotHum, heat, timeString, heaterTempLow, heaterTempHigh, heatOver, heaterStat, redDay, greenDay, blueDay, redNight, greenNight,
+            blueNight, daytimeStart, daytimeEnd );
     //Serial.println("..done");
     server.send(200, "application/javascript", data);
+
 }
 
 
@@ -502,6 +505,8 @@ void processMessage(void) {
         daytimeStart = atoi(thisIndex);
         thisIndex = strtok(NULL, ",");
         daytimeEnd = atoi(thisIndex);
+        thisIndex = strtok(NULL, ",");
+        surfaceTemp = atof(thisIndex);
         thisIndex = strtok(NULL, ",");
         //strcpy doesn't seem to work here. Must be some garbage. I'll force it....
         for (int x = 0; x < 19; x++) {

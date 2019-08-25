@@ -129,15 +129,15 @@ feedpetsbox = Box(app, width=400, height=100, grid=[2,4,2,1], border=True)
 
 
 
-clockDisplay = Text(clockBox, text="...",width="fill",size=48)
-dayDisplay = Text(clockBox, text="...", width="fill", size=32)
+clockDisplay = Text(clockBox, text="...",width="fill",size=36)
+dayDisplay = Text(clockBox, text="...", width="fill", size=24)
 
 #static text displays
 ctText = Text(ctbox, text="Spot's Cold Temperature:")
 htText = Text(htbox, text="Spot's Hot Temperature:")
 chText = Text(chbox, text="Spot's Cold Humidity:")
 hhText = Text(hhbox, text="Spot's Hot Humidity:")
-cheadText = Text(cheadbox, text="Today's Chores:", size=48, height="fill")
+cheadText = Text(cheadbox, text="Today's Chores:", size=36, height="fill")
 garbageText = Text(garbagebox, text="Take out the garbage", size=24)
 dishesText = Text(dishesbox, text="Empty the dishwasher", size=24)
 waterFridgeText = Text(waterfridgebox, text="Water in the fridge", size=24)

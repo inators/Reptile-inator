@@ -2,14 +2,11 @@
 #include "DHT.h"
 
 
-#define OLED_RESET 4
-
 
 #define DHTTYPE DHT22   // DHT 22 Thermometer
 #define DHTPIN 2     // what digital pin it is connected to
 #define DHTPIN2 4   // second thermometer connected
-
-#define SURFACEPIN 5 // Surface thermometer
+#define MOTION_SENSOR 12 // the motion sensor is here
 
 #define INPUT_SIZE 25
 
@@ -22,6 +19,7 @@ float coldHum = 0;
 float coldTemp = 0;
 float hotHum = 0;
 float hotTemp = 0;
+int motion = 0;
 
 char input[INPUT_SIZE + 1];
 int bufferIndex = 0;
@@ -40,11 +38,8 @@ void setup() {
     Serial.begin(115200);
     dht.begin();
     dht2.begin();
-
-
-
-
-
+    pinMode(MOTION_SENSOR, INPUT);
+    
 }
 
 
@@ -67,6 +62,8 @@ void loop() {
         }
 
     }
+
+    motion = digitalRead(MOTION_SENSOR);
 
 
     currentMillis = millis();
@@ -107,6 +104,11 @@ void processInput(void) {
         readSensors();
     if (input[0] == 'D') // dump all of the variables
         dumpEverything();
+    if (input[0] == 'M') // get motion sensor status
+        if (motion == HIGH)
+            Serial.println("High");
+        else
+            Serial.println("Low");
     bufferIndex = 0;
 
     input[0] = 0; // reset the string

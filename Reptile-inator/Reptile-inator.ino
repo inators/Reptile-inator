@@ -1,13 +1,9 @@
 
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
 #include "DHT.h"
-#include <EEPROM.h>
-#include <OneWire.h>              // For DS18B20
-#include <DallasTemperature.h>    // For DS18B20
+
 
 #define OLED_RESET 4
-Adafruit_SSD1306 display(OLED_RESET);
+
 
 #define DHTTYPE DHT22   // DHT 22 Thermometer
 #define DHTPIN 2     // what digital pin it is connected to
@@ -42,17 +38,9 @@ DHT dht2(DHTPIN2, DHTTYPE);
 
 void setup() {
     Serial.begin(115200);
+    dht.begin();
+    dht2.begin();
 
-    /*
-        Clock Crap
-    */
-    
-
-
-
-    /*
-        Pin crap
-    */
 
 
 
@@ -94,10 +82,7 @@ void loop() {
             hotHum = dht2.readHumidity();
             hotTemp = dht2.readTemperature(true);
             float tempFloat = 0;
-
-            
             count = 0;
-
 
 
         }

@@ -126,7 +126,7 @@ def submitChores():
 # A couple of things to do to turn on the monitor if it is off	
 def turnOnMonitor():
 	global monitorTime, monitorState
-	monitorTime = time() + (15*60) # 15 minutes
+	monitorTime = time() + (5*60) # 5 minutes
 	if monitorState == 0:
 		monitorState = 1
 		subprocess.call("vcgencmd display_power 1",shell=True)

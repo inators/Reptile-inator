@@ -3,9 +3,13 @@ from guizero import App, Text, Box, TextBox, PushButton, Combo
 from time import localtime, strftime, time
 import serial
 import sqlite3
+import subprocess
 
 dbFile = "/home/pi/chore-inator.db"
 
+#assume the monitor is turned off
+monitorState = 0 
+monitorTime = time()
 
 port = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=0.25)
 
@@ -25,8 +29,18 @@ def everySecond():
 	clockDisplay.value=ourTime
 	dayDisplay.value=ourDate
 	seconds = int(time())
+	# need to see if something changed in the background or if we have a new day.
 	if(seconds % 3600 == 0):
 		showChores()
+	port.write(b"M\r\n")
+	rawString = port.read(150)
+	stillAString = rawString.decode()
+	if "High" in stillAString:
+		turnOnMonitor()
+	else:
+		turnOffMonitor()
+	
+	
 	
 def everyFiveSeconds():
 	port.write(b"D\r\n")
@@ -113,8 +127,26 @@ def submitChores():
 	cur.execute(sql, updateme)
 	conn.commit()
 	showChores()
+
+# A couple of things to do to turn on the monitor if it is off	
+def turnOnMonitor():
+	global monitorTime, monitorState
+	monitorTime = time() + (15*60) # 15 minutes
+	if monitorState == 0:
+		monitorState = 1
+		subprocess.call("vcgencmd display_power 1",shell=True)
 	
-	
+# see if it is time to turn off the monitor
+def turnOffMonitor():
+	thisTime = time()
+	global monitorTime, monitorState
+	if thisTime > monitorTime:
+		if monitorState == 1:
+			monitorState = 0
+			subprocess.call("vcgencmd display_power 0",shell=True)
+
+
+
 	
 
 app = App(title="Reptile-inator & Chore-inator", width=800, height=600, layout="grid")

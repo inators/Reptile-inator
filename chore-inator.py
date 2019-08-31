@@ -61,6 +61,7 @@ def headerClicked():
 	waterFridgeTB.show()
 	waterPetsTB.show()
 	feedPetsTB.show()
+	brushPetsTB.show()
 	submitButton.show()
 	weekdayCombo.show()
 	today = strftime("%A",localtime())
@@ -73,6 +74,7 @@ def headerClicked():
 	waterFridgeTB.value = chores[3]
 	waterPetsTB.value = chores[4]
 	feedPetsTB.value = chores[5]
+	brushPetsTB.value = chores[6]
 	
 def updateBoxes():
 	today = weekdayCombo.value
@@ -84,6 +86,7 @@ def updateBoxes():
 	waterFridgeTB.value = chores[3]
 	waterPetsTB.value = chores[4]
 	feedPetsTB.value = chores[5]
+	brushPetsTB.value = chores[6]
 	
 	
 	
@@ -99,7 +102,7 @@ def showChores():
 	waterFridgeAssignText.value = chores[3]
 	waterPetAssignText.value = chores[4]
 	feedPetsAssignText.value = chores[5]
-	
+	brushPetsAssignText.value = chores[6]
 	
 	
 # we've hit the submit.  Now update the db
@@ -109,6 +112,7 @@ def submitChores():
 	waterFridgeTB.hide()
 	waterPetsTB.hide()
 	feedPetsTB.hide()
+	brushPetsTB.hide()
 	submitButton.hide()
 	weekdayCombo.hide()
 	today = weekdayCombo.value
@@ -117,8 +121,9 @@ def submitChores():
 	waterFridge = waterFridgeTB.value
 	waterPets = waterPetsTB.value
 	feedPets = feedPetsTB.value
-	updateme = (garbage, dishes, waterFridge, waterPets, feedPets, today)
-	sql = "Update Chores SET garbage = ? , dishes = ?, waterFridge = ?, waterPets = ?, feedPets = ? WHERE weekday = ?"
+	brushPets = brushPetsTB.value
+	updateme = (garbage, dishes, waterFridge, waterPets, feedPets, brushPets, today)
+	sql = "Update Chores SET garbage = ? , dishes = ?, waterFridge = ?, waterPets = ?, feedPets = ?, brushPets = ? WHERE weekday = ?"
 	cur.execute(sql, updateme)
 	conn.commit()
 	showChores()
@@ -144,7 +149,7 @@ def turnOffMonitor():
 
 	
 
-app = App(title="Reptile-inator & Chore-inator", width=800, height=500, layout="grid")
+app = App(title="Reptile-inator & Chore-inator", width=800, height=600, layout="grid")
 
 # set up boxes
 clockBox = Box(app, width=800, height=100, grid=[0,0,4,1], border=True)
@@ -158,6 +163,7 @@ dishesbox = Box(app, width=400, height=100, grid=[0,3,2,1], border=True)
 waterfridgebox = Box(app, width=400, height=100, grid=[2,3,2,1], border=True)
 waterpetsbox = Box(app, width=400, height=100, grid=[0,4,2,1], border=True)
 feedpetsbox = Box(app, width=400, height=100, grid=[2,4,2,1], border=True)
+brushpetsbox = Box(app, width=400, height=100, grid=[0,5,2,1], border=True)
 
 
 
@@ -175,6 +181,7 @@ dishesText = Text(dishesbox, text="Empty the dishwasher", size=24)
 waterFridgeText = Text(waterfridgebox, text="Water in the fridge", size=24)
 waterPetText = Text(waterpetsbox, text="Water the pets", size=24)
 feedPetsText = Text(feedpetsbox, text="Feed the pets", size=24)
+brushPetsText = Text(brushpetsbox, text="Brush Penny", size=24)
 
 #variable text displays
 coldTempDisplay = Text(ctbox, text="...", size=40)
@@ -186,6 +193,8 @@ dishesAssignText = Text(dishesbox, size=24)
 waterFridgeAssignText = Text(waterfridgebox, size=24)
 waterPetAssignText = Text(waterpetsbox, size=24)
 feedPetsAssignText = Text(feedpetsbox, size=24)
+brushPetsAssignText = Text(brushpetsbox, size=24)
+
 
 #input boxes
 garbageTB = TextBox(garbagebox, visible=False)
@@ -193,6 +202,7 @@ dishesTB = TextBox(dishesbox, visible=False)
 waterFridgeTB = TextBox(waterfridgebox, visible=False)
 waterPetsTB = TextBox(waterpetsbox, visible=False)
 feedPetsTB = TextBox(feedpetsbox, visible=False)
+brushPetsTB = TextBox(brushpetsbox, visible=False)
 weekdayCombo = Combo(cheadbox, options=weekDays, visible=False, align="left", command=updateBoxes)
 submitButton = PushButton(cheadbox, visible=False, text="Submit changes", command=submitChores, align="right")
 
@@ -219,7 +229,9 @@ cur.execute("""Create table if not exists chores (
 				dishes text DEFAULT nobody,
 				waterfridge text DEFAULT nobody,
 				waterpets text DEFAULT nobody,
-				feedpets text DEFAULT nobody
+				feedpets text DEFAULT nobody,
+				brushpets text DEFAULT nobody,
+				
 				); """ )
 	
 cur.execute("SELECT * FROM chores where weekday = 'Monday'")

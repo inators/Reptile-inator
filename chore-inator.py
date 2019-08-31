@@ -157,13 +157,13 @@ ctbox = Box(app, width=200, height=100, grid=[0,1], border=True)
 htbox = Box(app, width=200, height=100, grid=[1,1], border=True)
 chbox = Box(app, width=200, height=100, grid=[2,1], border=True)
 hhbox = Box(app, width=200, height=100, grid=[3,1], border=True)
-cheadbox = Box(app, width=400, height=100, grid=[0,2,2,1], border=True)
-garbagebox = Box(app, width=400, height=100, grid=[2,2,2,1], border=True)
-dishesbox = Box(app, width=400, height=100, grid=[0,3,2,1], border=True)
-waterfridgebox = Box(app, width=400, height=100, grid=[2,3,2,1], border=True)
-waterpetsbox = Box(app, width=400, height=100, grid=[0,4,2,1], border=True)
-feedpetsbox = Box(app, width=400, height=100, grid=[2,4,2,1], border=True)
-brushpetsbox = Box(app, width=400, height=100, grid=[0,5,2,1], border=True)
+cheadbox = Box(app, width=800, height=100, grid=[0,2,4,1], border=True)
+garbagebox = Box(app, width=400, height=100, grid=[0,3,2,1], border=True)
+dishesbox = Box(app, width=400, height=100, grid=[2,3,2,1], border=True)
+waterfridgebox = Box(app, width=400, height=100, grid=[0,4,2,1], border=True)
+waterpetsbox = Box(app, width=400, height=100, grid=[2,4,2,1], border=True)
+feedpetsbox = Box(app, width=400, height=100, grid=[0,5,2,1], border=True)
+brushpetsbox = Box(app, width=400, height=100, grid=[2,5,2,1], border=True)
 
 
 
@@ -230,7 +230,7 @@ cur.execute("""Create table if not exists chores (
 				waterfridge text DEFAULT nobody,
 				waterpets text DEFAULT nobody,
 				feedpets text DEFAULT nobody,
-				brushpets text DEFAULT nobody,
+				brushpets text DEFAULT nobody
 				
 				); """ )
 	

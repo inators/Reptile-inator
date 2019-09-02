@@ -207,7 +207,7 @@ weekdayCombo = Combo(cheadbox, options=weekDays, visible=False, align="left", co
 submitButton = PushButton(cheadbox, visible=False, text="Submit changes", command=submitChores, align="right")
 
 #repeats
-clockDisplay.repeat(1000,everySecond)
+clockDisplay.repeat(250,everySecond)
 coldTempDisplay.repeat(5000,everyFiveSeconds)
 
 #events

@@ -131,7 +131,7 @@ def submitChores():
 # A couple of things to do to turn on the monitor if it is off	
 def turnOnMonitor():
 	global monitorTime, monitorState
-	monitorTime = time() + (15*60) # 15 minutes
+	monitorTime = time() + (5*60) # 5 minutes
 	if monitorState == 0:
 		monitorState = 1
 		subprocess.call("vcgencmd display_power 1",shell=True)
@@ -157,13 +157,13 @@ ctbox = Box(app, width=200, height=100, grid=[0,1], border=True)
 htbox = Box(app, width=200, height=100, grid=[1,1], border=True)
 chbox = Box(app, width=200, height=100, grid=[2,1], border=True)
 hhbox = Box(app, width=200, height=100, grid=[3,1], border=True)
-cheadbox = Box(app, width=400, height=100, grid=[0,2,2,1], border=True)
-garbagebox = Box(app, width=400, height=100, grid=[2,2,2,1], border=True)
-dishesbox = Box(app, width=400, height=100, grid=[0,3,2,1], border=True)
-waterfridgebox = Box(app, width=400, height=100, grid=[2,3,2,1], border=True)
-waterpetsbox = Box(app, width=400, height=100, grid=[0,4,2,1], border=True)
-feedpetsbox = Box(app, width=400, height=100, grid=[2,4,2,1], border=True)
-brushpetsbox = Box(app, width=400, height=100, grid=[0,5,2,1], border=True)
+cheadbox = Box(app, width=800, height=100, grid=[0,2,4,1], border=True)
+garbagebox = Box(app, width=400, height=100, grid=[0,3,2,1], border=True)
+dishesbox = Box(app, width=400, height=100, grid=[2,3,2,1], border=True)
+waterfridgebox = Box(app, width=400, height=100, grid=[0,4,2,1], border=True)
+waterpetsbox = Box(app, width=400, height=100, grid=[2,4,2,1], border=True)
+feedpetsbox = Box(app, width=400, height=100, grid=[0,5,2,1], border=True)
+brushpetsbox = Box(app, width=400, height=100, grid=[2,5,2,1], border=True)
 
 
 
@@ -207,7 +207,7 @@ weekdayCombo = Combo(cheadbox, options=weekDays, visible=False, align="left", co
 submitButton = PushButton(cheadbox, visible=False, text="Submit changes", command=submitChores, align="right")
 
 #repeats
-clockDisplay.repeat(1000,everySecond)
+clockDisplay.repeat(250,everySecond)
 coldTempDisplay.repeat(5000,everyFiveSeconds)
 
 #events
@@ -230,7 +230,7 @@ cur.execute("""Create table if not exists chores (
 				waterfridge text DEFAULT nobody,
 				waterpets text DEFAULT nobody,
 				feedpets text DEFAULT nobody,
-				brushpets text DEFAULT nobody,
+				brushpets text DEFAULT nobody
 				
 				); """ )
 	

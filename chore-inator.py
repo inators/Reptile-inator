@@ -25,7 +25,7 @@ def populateTable():
 
 def everySecond():
 	ourTime = strftime("%I:%M:%S %p",localtime())
-	ourDate = strftime("%A %b. %m, %Y",localtime())
+	ourDate = strftime("%A %b. %d, %Y",localtime())
 	clockDisplay.value=ourTime
 	dayDisplay.value=ourDate
 	seconds = int(time())

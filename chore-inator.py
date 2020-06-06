@@ -179,7 +179,7 @@ cheadText = Text(cheadbox, text="Today's Chores:", size=36, height="fill")
 garbageText = Text(garbagebox, text="Take out the garbage", size=24)
 dishesText = Text(dishesbox, text="Empty the dishwasher", size=24)
 waterFridgeText = Text(waterfridgebox, text="Water in the fridge", size=24)
-waterPetText = Text(waterpetsbox, text="Water the pets", size=24)
+waterPetText = Text(waterpetsbox, text="Sweep the Floor", size=24)
 feedPetsText = Text(feedpetsbox, text="Feed the pets", size=24)
 brushPetsText = Text(brushpetsbox, text="Brush Penny", size=24)
 

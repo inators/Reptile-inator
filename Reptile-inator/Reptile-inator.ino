@@ -6,7 +6,7 @@
 #define DHTTYPE DHT22   // DHT 22 Thermometer
 #define DHTPIN 2     // what digital pin it is connected to
 #define DHTPIN2 4   // second thermometer connected
-#define MOTION_SENSOR 12 // the motion sensor is here
+#define MOTION_SENSOR 5 // the motion sensor is here
 
 #define INPUT_SIZE 25
 

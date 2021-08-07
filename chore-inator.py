@@ -102,7 +102,7 @@ def showChores():
 	waterFridgeAssignText.value = chores[3]
 	waterPetAssignText.value = chores[4]
 	feedPetsAssignText.value = chores[5]
-	brushPetsAssignText.value = chores[6]
+	#brushPetsAssignText.value = chores[6]
 	
 	
 # we've hit the submit.  Now update the db
@@ -181,7 +181,7 @@ dishesText = Text(dishesbox, text="Empty the dishwasher", size=24)
 waterFridgeText = Text(waterfridgebox, text="Water in the fridge", size=24)
 waterPetText = Text(waterpetsbox, text="Sweep the Floor", size=24)
 feedPetsText = Text(feedpetsbox, text="Feed the pets", size=24)
-brushPetsText = Text(brushpetsbox, text="Brush Penny", size=24)
+#brushPetsText = Text(brushpetsbox, text="Brush Penny", size=24)
 
 #variable text displays
 coldTempDisplay = Text(ctbox, text="...", size=40)
@@ -193,7 +193,7 @@ dishesAssignText = Text(dishesbox, size=24)
 waterFridgeAssignText = Text(waterfridgebox, size=24)
 waterPetAssignText = Text(waterpetsbox, size=24)
 feedPetsAssignText = Text(feedpetsbox, size=24)
-brushPetsAssignText = Text(brushpetsbox, size=24)
+#brushPetsAssignText = Text(brushpetsbox, size=24)
 
 
 #input boxes

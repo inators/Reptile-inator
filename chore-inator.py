@@ -154,6 +154,8 @@ def turnOffMonitor():
 	
 
 app = App(title="Reptile-inator & Chore-inator", width=800, height=600, layout="grid")
+app.tk.geometry('%dx%d+%d+%d' % (800, 600, 500, 200))
+
 
 # set up boxes
 clockBox = Box(app, width=800, height=100, grid=[0,0,4,1], border=True)

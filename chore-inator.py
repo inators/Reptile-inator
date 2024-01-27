@@ -4,6 +4,10 @@ from time import localtime, strftime, time
 import serial
 import sqlite3
 import subprocess
+import logging
+
+
+logging.basicConfig(level=logging.INFO, filename='mylog.log')
 
 dbFile = "/home/pi/chore-inator.db"
 
@@ -102,7 +106,7 @@ def showChores():
 	waterFridgeAssignText.value = chores[3]
 	waterPetAssignText.value = chores[4]
 	feedPetsAssignText.value = chores[5]
-	#brushPetsAssignText.value = chores[6]
+	brushPetsAssignText.value = chores[6]
 	
 	
 # we've hit the submit.  Now update the db
@@ -176,12 +180,12 @@ htText = Text(htbox, text="Spot's Hot Temperature:")
 chText = Text(chbox, text="Spot's Cold Humidity:")
 hhText = Text(hhbox, text="Spot's Hot Humidity:")
 cheadText = Text(cheadbox, text="Today's Chores:", size=36, height="fill")
-garbageText = Text(garbagebox, text="Take out the garbage", size=24)
+garbageText = Text(garbagebox, text="Feed/Water Pets", size=24)
 dishesText = Text(dishesbox, text="Empty the dishwasher", size=24)
-waterFridgeText = Text(waterfridgebox, text="Water in the fridge", size=24)
-waterPetText = Text(waterpetsbox, text="Sweep the Floor", size=24)
-feedPetsText = Text(feedpetsbox, text="Feed the pets", size=24)
-#brushPetsText = Text(brushpetsbox, text="Brush Penny", size=24)
+waterFridgeText = Text(waterfridgebox, text="Sweep old House", size=24)
+waterPetText = Text(waterpetsbox, text="Sweep Addition", size=24)
+feedPetsText = Text(feedpetsbox, text="Insert job here", size=24)
+brushPetsText = Text(brushpetsbox, text="Catch phrase", size=24)
 
 #variable text displays
 coldTempDisplay = Text(ctbox, text="...", size=40)
@@ -193,7 +197,7 @@ dishesAssignText = Text(dishesbox, size=24)
 waterFridgeAssignText = Text(waterfridgebox, size=24)
 waterPetAssignText = Text(waterpetsbox, size=24)
 feedPetsAssignText = Text(feedpetsbox, size=24)
-#brushPetsAssignText = Text(brushpetsbox, size=24)
+brushPetsAssignText = Text(brushpetsbox, size=24)
 
 
 #input boxes

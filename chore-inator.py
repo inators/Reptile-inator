@@ -5,9 +5,18 @@ import serial
 import sqlite3
 import subprocess
 import logging
+import sys
+import os
+
+filename = os.path.basename("__file__")
+logger = logging.getLogger("calendar-inator")
+logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(name)s] %(message)s',
+                     filename="/home/pi/mylogs.log")
+logger.info("Program start.")
+sys.stderr.write = logger.error
+sys.stdout.write = logger.info
 
 
-logging.basicConfig(level=logging.INFO, filename="/home/pi/chore-inator.log")
 dbFile = "/home/pi/chore-inator.db"
 
 # assume the monitor is turned off
@@ -159,8 +168,9 @@ def turnOnMonitor():
     monitorTime = time() + (5 * 60)  # 5 minutes
     if monitorState == 0:
         monitorState = 1
-        subprocess.call("vcgencmd display_power 1", shell=True)
-
+        #subprocess.call("vcgencmd display_power 1", shell=True)
+        subprocess.call("xset dpms force on", shell=True)
+        logger.info("Turn on Monitor")
 
 # see if it is time to turn off the monitor
 def turnOffMonitor():
@@ -169,7 +179,9 @@ def turnOffMonitor():
     if thisTime > monitorTime:
         if monitorState == 1:
             monitorState = 0
-            subprocess.call("vcgencmd display_power 0", shell=True)
+            #subprocess.call("vcgencmd display_power 0", shell=True)
+            subprocess.call("xset dpms force off", shell=True)
+            logger.info("Turn off Monitor")
 
 
 

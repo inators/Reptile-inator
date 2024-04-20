@@ -1,2 +1,5 @@
 mylog.log
+__pycache__
+*workspace
+*fzz
 

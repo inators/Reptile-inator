@@ -7,9 +7,10 @@ import subprocess
 import logging
 import sys
 import os
+from colors import Colors
 
-filename = os.path.basename("__file__")
-logger = logging.getLogger("calendar-inator")
+filename = os.path.basename(__file__)
+logger = logging.getLogger(f"{Colors.BLUE}{filename}{Colors.END}")
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(name)s] %(message)s',
                      filename="/home/pi/mylogs.log")
 logger.info("Program start.")
@@ -56,9 +57,11 @@ def everySecond():
     global clockDisplay
     ourTime = strftime("%I:%M:%S %p", localtime())
     ourDate = strftime("%A %b. %d, %Y", localtime())
+    clockDisplay.clear()
     clockDisplay.value = ourTime
     dayDisplay.value = ourDate
     seconds = int(time())
+    app.update()
     # need to see if something changed in the background or if we have a new day.
     if seconds % 3600 == 0:
         showChores()
@@ -72,17 +75,23 @@ def everySecond():
 
 
 def everyFiveSeconds():
+    global coldTempDisplay
     port.write(b"D\r\n")
     rawString = port.read(150)
+    logger.debug(rawString)
     stillAString = rawString.decode()
-
     tempData = stillAString.split(",")
 
     if len(tempData) > 1 and tempData[0].find("DUMP") > 0:
+        logger.debug("Populating data")
+        logger.debug("before"+coldHumidityDisplay.value)
+        coldHumidityDisplay.clear()
         coldHumidityDisplay.value = tempData[1] + "%"
+        logger.debug("after"+coldHumidityDisplay.value)
         hotHumidityDisplay.value = tempData[2] + "%"
         coldTempDisplay.value = tempData[3] + "\u00b0F"
         hotTempDisplay.value = tempData[4] + "\u00b0F"
+        app.update()
 
 
 def headerClicked():
@@ -105,6 +114,7 @@ def headerClicked():
     waterPetsTB.value = chores[4]
     feedPetsTB.value = chores[5]
     brushPetsTB.value = chores[6]
+    app.update()
 
 
 def updateBoxes():
@@ -118,7 +128,7 @@ def updateBoxes():
     waterPetsTB.value = chores[4]
     feedPetsTB.value = chores[5]
     brushPetsTB.value = chores[6]
-
+    app.update()
 
 # Show what the chores are. This should run every hour and when the db is updated
 def showChores():
@@ -128,13 +138,14 @@ def showChores():
     sql = f"SELECT * FROM chores WHERE weekday = '{today}'"
     cur.execute(sql)
     chores = cur.fetchone()
+    logger.debug(str(chores))
     garbageAssignText.value = chores[1]
     dishesAssignText.value = chores[2]
     waterFridgeAssignText.value = chores[3]
     waterPetAssignText.value = chores[4]
     feedPetsAssignText.value = chores[5]
     brushPetsAssignText.value = chores[6]
-
+    app.update()
 
 # we've hit the submit.  Now update the db
 def submitChores():
@@ -169,7 +180,7 @@ def turnOnMonitor():
     if monitorState == 0:
         monitorState = 1
         #subprocess.call("vcgencmd display_power 1", shell=True)
-        subprocess.call("xset dpms force on", shell=True)
+        subprocess.call("xset s activate", shell=True)
         logger.info("Turn on Monitor")
 
 # see if it is time to turn off the monitor

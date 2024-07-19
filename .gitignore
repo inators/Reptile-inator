@@ -2,5 +2,5 @@ mylog.log
 __pycache__
 *workspace
 *fzz
-
+.venv
 __pycache__

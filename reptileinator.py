@@ -100,7 +100,7 @@ def turnOnMonitor():
     if monitorState == 0:
         monitorState = 1
         #subprocess.call("vcgencmd display_power 1", shell=True)
-        subprocess.call("xset s activate", shell=True)
+        subprocess.call("wlr-randr --output HDMI-A-1 --on", shell=True)
         logger.info("Turn on Monitor")
 
 # see if it is time to turn off the monitor
@@ -111,7 +111,7 @@ def turnOffMonitor():
         if monitorState == 1:
             monitorState = 0
             #subprocess.call("vcgencmd display_power 0", shell=True)
-            subprocess.call("xset dpms force off", shell=True)
+            subprocess.call("wlr-randr --output HDMI-A-1 --off", shell=True)
             logger.info("Turn off Monitor")
 
 
@@ -119,16 +119,16 @@ def turnOffMonitor():
 
 
 app = App(
-    title="Reptile-inator", width=800, height=400, layout="grid"
+    title="Reptile-inator", width=800, height=150, layout="grid"
 )
-app.tk.geometry("%dx%d+%d+%d" % (800, 400, 510, 50))
+app.tk.geometry("%dx%d+%d+%d" % (800, 150, 510, 62))
 
 # set up boxes
-clockBox = Box(app, width=800, height=200, grid=[0, 0, 4, 1], border=True)
-ctbox = Box(app, width=200, height=200, grid=[0, 1], border=True)
-htbox = Box(app, width=200, height=200, grid=[1, 1], border=True)
-chbox = Box(app, width=200, height=200, grid=[2, 1], border=True)
-hhbox = Box(app, width=200, height=200, grid=[3, 1], border=True)
+clockBox = Box(app, width=800, height=100, grid=[0, 0, 4, 1], border=True)
+ctbox = Box(app, width=200, height=50, grid=[0, 1], border=True)
+htbox = Box(app, width=200, height=50, grid=[1, 1], border=True)
+chbox = Box(app, width=200, height=50, grid=[2, 1], border=True)
+hhbox = Box(app, width=200, height=50, grid=[3, 1], border=True)
 
 clockDisplay = Text(clockBox, text="...", width="fill", size=36)
 dayDisplay = Text(clockBox, text="...", width="fill", size=24)

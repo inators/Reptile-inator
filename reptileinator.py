@@ -8,10 +8,8 @@ Modified By: David Whipple
 '''
 
 #!/usr/bin/python3
-from guizero import App, Text, Box, TextBox, PushButton, Combo
 from time import localtime, strftime, time
 import serial
-import sqlite3
 import subprocess
 import logging
 import sys
@@ -40,26 +38,10 @@ except:
 
 
 
-weekDays = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-]
-
-
 def everySecond():
-    global clockDisplay
     ourTime = strftime("%I:%M:%S %p", localtime())
     ourDate = strftime("%A %b. %d, %Y", localtime())
-    clockDisplay.clear()
-    clockDisplay.value = ourTime
-    dayDisplay.value = ourDate
     seconds = int(time())
-    app.update()
     # need to see if something changed in the background or if we have a new day.
     if not port is False:
         port.write(b"M\r\n")
@@ -72,7 +54,6 @@ def everySecond():
 
 
 def everyFiveSeconds():
-    global coldTempDisplay
     if not port is False:
         port.write(b"D\r\n")
         rawString = port.read(150)
@@ -81,15 +62,11 @@ def everyFiveSeconds():
         tempData = stillAString.split(",")
 
     if len(tempData) > 1 and tempData[0].find("DUMP") > 0:
-        logger.debug("Populating data")
-        logger.debug("before"+coldHumidityDisplay.value)
-        coldHumidityDisplay.clear()
-        coldHumidityDisplay.value = tempData[1] + "%"
-        logger.debug("after"+coldHumidityDisplay.value)
-        hotHumidityDisplay.value = tempData[2] + "%"
-        coldTempDisplay.value = tempData[3] + "\u00b0F"
-        hotTempDisplay.value = tempData[4] + "\u00b0F"
-        app.update()
+        coldHumidityDisplay = tempData[1] + "%"
+        hotHumidityDisplay = tempData[2] + "%"
+        coldTempDisplay = tempData[3] + "\u00b0F"
+        hotTempDisplay = tempData[4] + "\u00b0F"
+        
 
 
 
@@ -100,7 +77,7 @@ def turnOnMonitor():
     if monitorState == 0:
         monitorState = 1
         #subprocess.call("vcgencmd display_power 1", shell=True)
-        subprocess.call("wlr-randr --output HDMI-A-1 --on", shell=True)
+        subprocess.run(["wlr-randr --output HDMI-A-1 --on"], shell=True)
         logger.info("Turn on Monitor")
 
 # see if it is time to turn off the monitor
@@ -111,43 +88,7 @@ def turnOffMonitor():
         if monitorState == 1:
             monitorState = 0
             #subprocess.call("vcgencmd display_power 0", shell=True)
-            subprocess.call("wlr-randr --output HDMI-A-1 --off", shell=True)
+            subprocess.run(["wlr-randr --output HDMI-A-1 --off"], shell=True)
             logger.info("Turn off Monitor")
-
-
-
-
-
-app = App(
-    title="Reptile-inator", width=800, height=150, layout="grid"
-)
-app.tk.geometry("%dx%d+%d+%d" % (800, 150, 510, 62))
-
-# set up boxes
-clockBox = Box(app, width=800, height=100, grid=[0, 0, 4, 1], border=True)
-ctbox = Box(app, width=200, height=50, grid=[0, 1], border=True)
-htbox = Box(app, width=200, height=50, grid=[1, 1], border=True)
-chbox = Box(app, width=200, height=50, grid=[2, 1], border=True)
-hhbox = Box(app, width=200, height=50, grid=[3, 1], border=True)
-
-clockDisplay = Text(clockBox, text="...", width="fill", size=36)
-dayDisplay = Text(clockBox, text="...", width="fill", size=24)
-
-# static text displays
-ctText = Text(ctbox, text="Spot's Cold Temperature:", size=10)
-htText = Text(htbox, text="Spot's Hot Temperature:", size=10)
-chText = Text(chbox, text="Spot's Cold Humidity:", size=10)
-hhText = Text(hhbox, text="Spot's Hot Humidity:", size=10)
-
-# variable text displays
-coldTempDisplay = Text(ctbox, text="...", size=20)
-hotTempDisplay = Text(htbox, text="...", size=20)
-coldHumidityDisplay = Text(chbox, text="...", size=20)
-hotHumidityDisplay = Text(hhbox, text="...", size=20)
-
-# repeats
-clockDisplay.repeat(250, everySecond)
-coldTempDisplay.repeat(5000, everyFiveSeconds)
-app.display()
 
 

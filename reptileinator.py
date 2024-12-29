@@ -1,3 +1,4 @@
+#!/home/david/venvreptile/bin/python
 '''
 Project: /home/david/Code/Reptile-inator
 Created Date: 2024-12-10 09:29:26 PM
@@ -7,7 +8,6 @@ Last Modified: 2024-12-10 09:44:07 PM
 Modified By: David Whipple
 '''
 
-#!/usr/bin/python3
 from time import localtime, strftime, time, sleep
 import serial
 import subprocess
@@ -32,8 +32,8 @@ sys.stdout.write = logger.info
 
 
 
-# assume the monitor is turned off
-monitorState = 0
+# Don't know monitor state
+monitorState = 2
 monitorTime = time()
 
 try:
@@ -50,15 +50,18 @@ def cron():
     ourDate = strftime("%A %b. %d, %Y", localtime())
     seconds = int(time())
     # need to see if something changed in the background or if we have a new day.
-    if not port is False:
-        port.write(b"M\r\n")
-        rawString = port.read(150)
-        stillAString = rawString.decode()
-        if "High" in stillAString:
-            turnOnMonitor()
-        else:
-            turnOffMonitor()
-
+    try:
+        if not port is False:
+            port.write(b"M\r\n")
+            rawString = port.read(150)
+            stillAString = rawString.decode()
+            if "High" in stillAString:
+                turnOnMonitor()
+            else:
+                turnOffMonitor()
+    except Exception as e:
+        print(e)
+                
     
 def runevery10():
     # Runs ever 10 seconds
@@ -95,8 +98,9 @@ def runevery10():
 # A couple of things to do to turn on the monitor if it is off
 def turnOnMonitor():
     global monitorTime, monitorState
-    monitorTime = time() + (5 * 60)  # 5 minutes
-    if monitorState == 0:
+#    monitorTime = time() + (5 * 60)  # 5 minutes
+    monitorTime = time() + (1 * 60)  # 1 minutes
+    if monitorState == 0 or monitorState == 2:
         monitorState = 1
         #subprocess.call("vcgencmd display_power 1", shell=True)
         subprocess.run(["wlr-randr --output HDMI-A-1 --on"], shell=True)
@@ -107,7 +111,7 @@ def turnOffMonitor():
     thisTime = time()
     global monitorTime, monitorState
     if thisTime > monitorTime:
-        if monitorState == 1:
+        if monitorState == 1 or monitorState == 2:
             monitorState = 0
             #subprocess.call("vcgencmd display_power 0", shell=True)
             subprocess.run(["wlr-randr --output HDMI-A-1 --off"], shell=True)

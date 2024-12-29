@@ -8,13 +8,18 @@ Modified By: David Whipple
 '''
 
 #!/usr/bin/python3
-from time import localtime, strftime, time
+from time import localtime, strftime, time, sleep
 import serial
 import subprocess
 import logging
 import sys
 import os
+import requests
+import threading
 from colors import Colors
+
+url = "https://choreinator.whipplefamily.net/api.html"
+
 
 filename = os.path.basename(__file__)
 homefolder = os.path.expanduser("~")
@@ -38,7 +43,9 @@ except:
 
 
 
-def everySecond():
+def cron():
+
+    # runs every second
     ourTime = strftime("%I:%M:%S %p", localtime())
     ourDate = strftime("%A %b. %d, %Y", localtime())
     seconds = int(time())
@@ -52,21 +59,36 @@ def everySecond():
         else:
             turnOffMonitor()
 
+    
+def runevery10():
+    # Runs ever 10 seconds
+    seconds = time()
+    try:
+        if not port is False:
+            port.write(b"D\r\n")
+            rawString = port.read(150)
+            logger.debug(rawString)
+            stillAString = rawString.decode()
+            tempData = stillAString.split(",")
 
-def everyFiveSeconds():
-    if not port is False:
-        port.write(b"D\r\n")
-        rawString = port.read(150)
-        logger.debug(rawString)
-        stillAString = rawString.decode()
-        tempData = stillAString.split(",")
+        if len(tempData) > 1 and tempData[0].find("DUMP") > 0:
+            measurements = {
+                "device": "spot",
+                "seconds": seconds,
+                "coldHumidity": tempData[1],
+                "hotHumidity": tempData[2],
+                "coldTemp": tempData[3],
+                "hotTemp": tempData[4]
+            }
+            r = requests.post(url,measurements)
+            if r.text != "ok (spot)":
+                logger.error(f"Sent measurement. Reponse:{r.text}")
+    except Exception as e:
+        print(e)
 
-    if len(tempData) > 1 and tempData[0].find("DUMP") > 0:
-        coldHumidityDisplay = tempData[1] + "%"
-        hotHumidityDisplay = tempData[2] + "%"
-        coldTempDisplay = tempData[3] + "\u00b0F"
-        hotTempDisplay = tempData[4] + "\u00b0F"
-        
+    timer = threading.Timer(10, runevery10)
+    timer.start()
+
 
 
 
@@ -91,4 +113,13 @@ def turnOffMonitor():
             subprocess.run(["wlr-randr --output HDMI-A-1 --off"], shell=True)
             logger.info("Turn off Monitor")
 
+def main():
+    print("started")
+    runevery10()
 
+    while True:
+        cron()
+        sleep(1)
+
+if __name__ == "__main__":
+    main()

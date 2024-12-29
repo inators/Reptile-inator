@@ -15,7 +15,6 @@ import logging
 import sys
 import os
 import requests
-import threading
 from colors import Colors
 
 url = "https://choreinator.whipplefamily.net/api.html"
@@ -35,6 +34,7 @@ sys.stdout.write = logger.info
 # Don't know monitor state
 monitorState = 2
 monitorTime = time()
+cron10 = 0
 
 try:
     port = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=0.25)
@@ -44,6 +44,7 @@ except:
 
 
 def cron():
+    global cron10
 
     # runs every second
     ourTime = strftime("%I:%M:%S %p", localtime())
@@ -62,7 +63,11 @@ def cron():
     except Exception as e:
         print(e)
                 
-    
+    cron10 += 1
+    if cron10 == 10:
+        cron10 = 0
+        runevery10()
+
 def runevery10():
     # Runs ever 10 seconds
     seconds = time()
@@ -89,8 +94,6 @@ def runevery10():
     except Exception as e:
         print(e)
 
-    timer = threading.Timer(10, runevery10)
-    timer.start()
 
 
 
@@ -119,7 +122,6 @@ def turnOffMonitor():
 
 def main():
     print("started")
-    runevery10()
 
     while True:
         cron()

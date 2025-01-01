@@ -16,9 +16,7 @@ import sys
 import os
 import requests
 from colors import Colors
-import RPi.GPIO as GPIO
 
-buttonpin = 3
 url = "https://choreinator.whipplefamily.net/api.html"
 
 
@@ -30,9 +28,6 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(name)s] %(message
 logger.info("Program start.")
 sys.stderr.write = logger.error
 sys.stdout.write = logger.info
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 
 # Don't know monitor state
@@ -124,13 +119,8 @@ def turnOffMonitor():
             subprocess.run(["wlr-randr --output HDMI-A-1 --off"], shell=True)
             logger.info("Turn off Monitor")
 
-def resetfirefox(x):
-    subprocess.run(["pkill firefox"])
-    subprocess.run(["/home/david/firefoxstart.sh"])
-
 def main():
     print("started")
-    GPIO.add_event_detect(buttonpin,GPIO.RISING,callback=resetfirefox,bouncetime=200)
 
 
     while True:

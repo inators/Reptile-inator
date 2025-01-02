@@ -17,14 +17,20 @@ import os
 import requests
 from colors import Colors
 
+if len(sys.argv) > 1 and sys.argv['1'] == "--debug":
+    loglevel1 = logging.DEBUG
+else:
+    loglevel1 = logging.INFO
+
+
 url = "https://choreinator.whipplefamily.net/api.html"
 
 filename = os.path.basename(__file__)
 homefolder = os.path.expanduser("~")
 logger = logging.getLogger(f"{Colors.BLUE}{filename}{Colors.END}")
-logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(name)s] %(message)s',
+logging.basicConfig(level=loglevel1, format='%(asctime)s [%(name)s] %(message)s',
                      filename=f"{homefolder}/mylogs.log")
-logger.info("Program start.")
+logger.info("Program start.".strip())
 sys.stderr.write = logger.error
 sys.stdout.write = logger.info
 
@@ -33,11 +39,11 @@ sys.stdout.write = logger.info
 monitorState = 2
 monitorTime = time()
 cron10 = 0
-
+logging
 try:
     port = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=0.25)
 except Exception as e:
-    print(e)
+    print(e,end="")
     port = False
 
 
@@ -55,13 +61,13 @@ def cron():
             port.write(b"M\r\n")
             rawString = port.read(150)
             stillAString = rawString.decode()
-            logger.debug(stillAString)
+            logger.debug(stillAString.strip())
             if "High" in stillAString:
                 turnOnMonitor()
             else:
                 turnOffMonitor()
     except Exception as e:
-        print(e)
+        print(e,end="")
 
     cron10 += 1
     if cron10 == 10:
@@ -78,9 +84,9 @@ def runevery10():
             rawString = port.read(150)
             stillAString = rawString.decode()
             tempData = stillAString.split(",")
-            logger.debug(tempData)
+            logger.debug(stillAString.strip())
         else:
-            print("Port is false")
+            print("Port is false",end="")
         if not tempData is None and len(tempData) > 1 and tempData[0].find("DUMP") > 0:
             measurements = {
                 "device": "spot",
@@ -91,11 +97,11 @@ def runevery10():
                 "hotTemp": tempData[4]
             }
             r = requests.post(url,measurements)
-            logger.debug(r.text)
+            logger.debug(r.text.strip())
             if r.text != "ok (spot)":
-                print(f"Sent measurement. Reponse:{r.text}")
+                print(f"Sent measurement. Reponse:{r.text}",end="")
     except Exception as e:
-        print(e)
+        print(e,end="")
 
 
 
@@ -124,7 +130,7 @@ def turnOffMonitor():
             logger.info("Turn off Monitor")
 
 def main():
-    print("started")
+    print("started",end="")
     runevery10()
 
     while True:

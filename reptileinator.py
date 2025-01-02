@@ -19,7 +19,6 @@ from colors import Colors
 
 url = "https://choreinator.whipplefamily.net/api.html"
 
-
 filename = os.path.basename(__file__)
 homefolder = os.path.expanduser("~")
 logger = logging.getLogger(f"{Colors.BLUE}{filename}{Colors.END}")
@@ -37,7 +36,8 @@ cron10 = 0
 
 try:
     port = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=0.25)
-except:
+except Exception as e:
+    print(e)
     port = False
 
 
@@ -68,28 +68,33 @@ def cron():
         runevery10()
 
 def runevery10():
+    print(10)
     # Runs ever 10 seconds
     seconds = time()
+    tempDate = None
+    print(port)
     try:
         if not port is False:
             port.write(b"D\r\n")
             rawString = port.read(150)
-            logger.debug(rawString)
             stillAString = rawString.decode()
             tempData = stillAString.split(",")
-
-        if len(tempData) > 1 and tempData[0].find("DUMP") > 0:
+            logger.debug(tempData)
+        else:
+            print("Port is false")
+        if not tempData is None and len(tempData) > 1 and tempData[0].find("DUMP") > 0:
             measurements = {
                 "device": "spot",
-                "seconds": seconds,
+                "spotseconds": seconds,
                 "coldHumidity": tempData[1],
                 "hotHumidity": tempData[2],
                 "coldTemp": tempData[3],
                 "hotTemp": tempData[4]
             }
             r = requests.post(url,measurements)
+            logger.debug(r.text)
             if r.text != "ok (spot)":
-                logger.error(f"Sent measurement. Reponse:{r.text}")
+                print(f"Sent measurement. Reponse:{r.text}")
     except Exception as e:
         print(e)
 
@@ -121,11 +126,14 @@ def turnOffMonitor():
 
 def main():
     print("started")
-
+    runevery10()
 
     while True:
         cron()
         sleep(1)
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except:
+        port.close()

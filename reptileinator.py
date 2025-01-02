@@ -1,4 +1,4 @@
-#!/home/david/venvreptile/bin/python
+#!/home/david/Code/Reptile-inator/.venv/bin/python 
 '''
 Project: /home/david/Code/Reptile-inator
 Created Date: 2024-12-10 09:29:26 PM
@@ -55,24 +55,23 @@ def cron():
             port.write(b"M\r\n")
             rawString = port.read(150)
             stillAString = rawString.decode()
+            logger.debug(stillAString)
             if "High" in stillAString:
                 turnOnMonitor()
             else:
                 turnOffMonitor()
     except Exception as e:
         print(e)
-                
+
     cron10 += 1
     if cron10 == 10:
         cron10 = 0
         runevery10()
 
 def runevery10():
-    print(10)
     # Runs ever 10 seconds
     seconds = time()
-    tempDate = None
-    print(port)
+    tempData = None
     try:
         if not port is False:
             port.write(b"D\r\n")
